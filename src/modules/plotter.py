@@ -21,7 +21,7 @@ class Plotter:
     def scatter_data(self, data_min, data_max, save=False):
         x_ = np.arange(data_min, data_max, 0.01)
 
-        plt.plot(x_, [self.model.predict([x]) for x in x_], 'y', label='Model')
+        plt.plot(x_, [self.model.predict([x]) for x in x_], 'r', label='Model')
 
         plt.scatter(self.training_inputs, self.training_outputs, label='Training Data')
         plt.scatter(self.testing_inputs, self.testing_outputs, label='Testing Data')

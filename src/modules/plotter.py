@@ -34,6 +34,27 @@ class Plotter:
 
         plt.show()
 
+    def scatter_data_for_classification(self, data_min, data_max, save=False):
+        x_ = np.arange(data_min, data_max, 0.01)
+
+        def hypotheses(x):
+            return (-(self.model.weights[0] / self.model.weights[1]) * x) - (
+                    self.model.weights[2] / self.model.weights[1])
+
+        plt.plot(x_, [hypotheses(x) for x in x_], 'r', label='Model')
+
+        plt.scatter(self.training_inputs[:, 0], self.training_inputs[:, 1], c=self.training_outputs,
+                    label='Training Data')
+        plt.scatter(self.testing_inputs[:, 0], self.testing_inputs[:, 1], label='Testing Data')
+        plt.legend(loc='upper left')
+
+        if save:
+            plt.savefig(
+                os.path.join(self.saves_output_dir, f'{self.saves_prefix}_data.png')
+            )
+
+        plt.show()
+
     def plot_loss_evolution(self, save=False):
         plt.plot(range(len(self.model.loss_history)), self.model.loss_history, label='Training Loss')
         plt.plot(range(len(self.model.testing_loss_history)), self.model.testing_loss_history, 'y',

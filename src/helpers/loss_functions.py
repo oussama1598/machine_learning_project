@@ -48,3 +48,10 @@ def logit_gradient(inputs, outputs, predict_function):
         gradients.append(gradient)
 
     return np.array(gradients)
+
+
+def normal_error(inputs, outputs, predict_function):
+    return sum([
+        int(predict_function(inputs[i]) != outputs[i])
+        for i in range(len(inputs))
+    ]) / inputs.shape[0]

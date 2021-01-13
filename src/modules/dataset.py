@@ -33,6 +33,10 @@ class Dataset:
         self.inputs = np.array(data)[:, :-1]
         self.outputs = np.array(data)[:, -1]
 
+    def replace_output(self, fn):
+        for i in range(len(self.outputs)):
+            self.outputs[i] = fn(i, self.outputs[i])
+
     def mean(self, column=''):
         if column not in self.input_labels:
             return 0

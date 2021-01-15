@@ -23,9 +23,12 @@ class PolynomialRegression(Neuron):
 
         return self._predict(np.concatenate((x, [1])))
 
-    def train(self, max_iterations=100, learning_rate=0.1):
+    def train(self, max_iterations=100, learning_rate=0.1, use_armijo=False):
         for i in range(max_iterations):
             gradients = mean_squared_gradient(self.inputs, self.outputs, self.predict)
+
+            if use_armijo:
+                learning_rate = self.armijo()
 
             self.weights = self.weights - learning_rate * gradients
 

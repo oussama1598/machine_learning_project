@@ -7,7 +7,7 @@ from src.modules.neuron import Neuron
 
 class LogisticRegression(Neuron):
     def __init__(self, *args):
-        super().__init__(*args, loss_function=logit_error)
+        super().__init__(*args, activation_function=sigmoid, loss_function=logit_error)
 
     def predict(self, x):
         if len(x) != 1:

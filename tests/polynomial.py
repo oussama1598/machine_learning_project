@@ -1,4 +1,5 @@
 import os
+
 from src.modules.dataset import Dataset
 from src.modules.plotter import Plotter
 from src.modules.polynomial_regression import PolynomialRegression
@@ -32,7 +33,7 @@ plotter = Plotter(
     saves_prefix='polynomial'
 )
 
-polynomial_regression.train(max_iterations=1000, learning_rate=0.01)
+polynomial_regression.train(max_iterations=30, use_armijo=True, learning_rate=0.01)
 
 plotter.scatter_data(dataset.min(column='x'), dataset.max(column='x'), save=True)
 plotter.plot_loss_evolution(save=True)

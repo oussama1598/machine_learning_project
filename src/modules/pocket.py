@@ -19,12 +19,6 @@ class Pocket(Neuron):
 
         return self._predict(np.concatenate((x, [1])))
 
-    def predict_with_weights(self, x, weights):
-        return self.activation_function(np.dot(weights, x))
-
-    def calculate_loss_with_weights(self, weights):
-        return self.loss_function(self.inputs, self.outputs, lambda x: self.predict_with_weights(x, weights))
-
     def train(self, max_iterations=1000):
         weights = self.weights.copy()
 
@@ -33,10 +27,10 @@ class Pocket(Neuron):
                 x = self.inputs[i]
                 y = self.outputs[i]
 
-                if self.predict_with_weights(x, weights) != y:
+                if self._predict(x, weights) != y:
                     weights = weights + (y * x)
 
-            if self.calculate_loss_with_weights(weights) < self.calculate_loss_with_weights(self.weights):
+            if self.calculate_loss(weights) < self.calculate_loss(self.weights):
                 self.weights = weights.copy()
 
             super().train()

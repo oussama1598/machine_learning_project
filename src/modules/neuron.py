@@ -12,7 +12,7 @@ class Neuron:
 
         self.loss_function = loss_function
         self.activation_function = activation_function
-        self.weights = []
+        self.weights = np.array([])
 
         self.loss_history = []
         self.testing_loss_history = []
@@ -26,10 +26,13 @@ class Neuron:
             [np.random.uniform(-1, 1) for _ in range(input_dimension)]
         )
 
-    def _predict(self, x):
-        return self.activation_function(np.dot(self.weights, x))
+    def _predict(self, x, weights=None):
+        if weights is None:
+            weights = self.weights
 
-    def calculate_loss(self, testing=False):
+        return self.activation_function(np.dot(weights, x))
+
+    def calculate_loss(self, weights=None, testing=False):
         inputs = self.inputs
         outputs = self.outputs
 
@@ -37,7 +40,34 @@ class Neuron:
             inputs = self.testing_inputs
             outputs = self.testing_outputs
 
-        return self.loss_function(inputs, outputs, self._predict)
+        return self.loss_function(inputs, outputs, self._predict, weights)
+
+    def armijo_gradient(self):
+        partial_derivatives = []
+
+        for i in range(len(self.weights)):
+            dx = np.zeros(len(self.weights))
+            dx[i] = 0.001
+
+            partial_derivatives.append(
+                (self.loss_function(self.inputs, self.outputs, self._predict, self.weights + dx) - self.loss_function(
+                    self.inputs, self.outputs, self._predict, self.weights)) / 0.001
+            )
+
+        return np.array(partial_derivatives)
+
+    def armijo(self, beta=0.1):
+        epsilon = 1
+        derivative = self.armijo_gradient()
+
+        def error(x):
+            return self.loss_function(self.inputs, self.outputs, self._predict, x)
+
+        while error(self.weights - epsilon * derivative) > error(self.weights) - (epsilon / 2) * (
+                np.linalg.norm(derivative) ** 2):
+            epsilon = epsilon * beta
+
+        return epsilon
 
     def train(self):
         self.loss_history.append(self.calculate_loss())

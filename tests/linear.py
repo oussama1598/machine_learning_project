@@ -32,7 +32,7 @@ plotter = Plotter(
     saves_prefix='linear'
 )
 
-linear_regression.train(max_iterations=1000, learning_rate=0.01)
+linear_regression.train(max_iterations=100, learning_rate=0.01, use_armijo=True)
 
 plotter.scatter_data(dataset.min(column='x'), dataset.max(column='x'), save=True)
 plotter.plot_loss_evolution(save=True)

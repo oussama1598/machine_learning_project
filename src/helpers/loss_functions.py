@@ -27,14 +27,14 @@ def mean_squared_gradient(inputs, outputs, predict_function):
     return np.array(gradients)
 
 
-def logit_error(inputs, outputs, predict_function, weights=None):
+def cross_entropy_error(inputs, outputs, predict_function, weights=None):
     return - sum([
         (outputs[i] * math.log(predict_function(x, weights))) + ((1 - outputs[i]) - math.log(1 - predict_function(x, weights)))
         for i, x in enumerate(inputs)
     ]) / inputs.shape[0]
 
 
-def logit_gradient(inputs, outputs, predict_function):
+def cross_entropy_gradient(inputs, outputs, predict_function):
     gradients = []
 
     for j in range(inputs.shape[1]):

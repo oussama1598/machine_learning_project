@@ -1,12 +1,14 @@
 import numpy as np
 
+from src.helpers.accuracy_functions import r_squared
 from src.helpers.loss_functions import mean_squared_error, mean_squared_gradient
 from src.modules.neuron import Neuron
 
 
 class LinearRegression(Neuron):
     def __init__(self, inputs, outputs, testing_inputs, testing_outputs):
-        super().__init__(inputs, outputs, testing_inputs, testing_outputs, loss_function=mean_squared_error)
+        super().__init__(inputs, outputs, testing_inputs, testing_outputs, loss_function=mean_squared_error,
+                         accuracy_function=r_squared)
 
     def predict(self, x):
         if len(x) != 1:

@@ -2,6 +2,7 @@ import csv
 import math
 
 import numpy as np
+from tabulate import tabulate
 
 
 class Dataset:
@@ -38,28 +39,40 @@ class Dataset:
             self.outputs[i] = fn(i, self.outputs[i])
 
     def mean(self, column=''):
-        if column not in self.input_labels:
-            return 0
+        if column in self.input_labels:
+            feature_index = self.input_labels.index(column)
 
-        feature_index = self.input_labels.index(column)
+            return np.mean(self.inputs[:, feature_index])
 
-        return np.mean(self.inputs[:, feature_index])
+        if column == self.output_label:
+            return np.mean(self.outputs)
+
+    def median(self, column=''):
+        if column in self.input_labels:
+            feature_index = self.input_labels.index(column)
+
+            return np.median(self.inputs[:, feature_index])
+
+        if column == self.output_label:
+            return np.median(self.outputs)
 
     def max(self, column=''):
-        if column not in self.input_labels:
-            return 0
+        if column in self.input_labels:
+            feature_index = self.input_labels.index(column)
 
-        feature_index = self.input_labels.index(column)
+            return np.max(self.inputs[:, feature_index])
 
-        return np.max(self.inputs[:, feature_index])
+        if column == self.output_label:
+            return np.max(self.outputs)
 
     def min(self, column=''):
-        if column not in self.input_labels:
-            return 0
+        if column in self.input_labels:
+            feature_index = self.input_labels.index(column)
 
-        feature_index = self.input_labels.index(column)
+            return np.min(self.inputs[:, feature_index])
 
-        return np.min(self.inputs[:, feature_index])
+        if column == self.output_label:
+            return np.min(self.outputs)
 
     def normalize(self):
         self.outputs = (self.outputs - np.mean(self.outputs)) / np.std(self.outputs)
@@ -87,3 +100,30 @@ class Dataset:
         testing_outputs = self.outputs[total_elements_size - testing_size:]
 
         return training_inputs, testing_inputs, training_outputs, testing_outputs
+
+    def describe(self, columns=None):
+        if columns is None:
+            columns = []
+
+        data = []
+
+        for column in columns:
+            data.append([
+                column,
+                self.max(column=column),
+                self.min(column=column),
+                self.mean(column=column),
+                self.median(column=column)
+            ])
+
+        return tabulate(data, headers=['Name', 'Max', 'Min', 'Mean', 'Median'])
+
+    def check_null_inputs(self):
+        for x in self.inputs:
+            for feature in x:
+                if feature:
+                    continue
+
+                return False
+
+        return True

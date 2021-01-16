@@ -33,7 +33,15 @@ plotter = Plotter(
     saves_prefix='polynomial'
 )
 
-polynomial_regression.train(max_iterations=30, use_armijo=True, learning_rate=0.01)
+polynomial_regression.train(max_iterations=30, use_armijo=True)
 
 plotter.scatter_data(dataset.min(column='x'), dataset.max(column='x'), save=True)
 plotter.plot_loss_evolution(save=True)
+plotter.plot_accuracy_evolution(save=True)
+
+training_loss, testing_loss = polynomial_regression.get_loss()
+training_accuracy, testing_accuracy = polynomial_regression.get_accuracy()
+
+print(f"""Training Accuracy: {training_accuracy}, Training Loss: {training_loss}
+Testing Accuracy: {testing_accuracy}, Testing Loss: {testing_loss}
+""")

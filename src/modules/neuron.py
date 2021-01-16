@@ -3,7 +3,7 @@ import numpy as np
 
 class Neuron:
     def __init__(self, inputs: np.array, outputs: np.array, testing_inputs: np.array, testing_outputs: np.array,
-                 loss_function, activation_function=lambda x: x):
+                 loss_function, accuracy_function, activation_function=lambda x: x):
         self.inputs = np.array([np.concatenate((x, np.array([1]))) for x in inputs])
         self.outputs = outputs
 
@@ -11,11 +11,14 @@ class Neuron:
         self.testing_outputs = testing_outputs
 
         self.loss_function = loss_function
+        self.accuracy_function = accuracy_function
         self.activation_function = activation_function
         self.weights = np.array([])
 
         self.loss_history = []
+        self.accuracy_history = []
         self.testing_loss_history = []
+        self.testing_accuracy_history = []
 
         self._initialize_weights()
 
@@ -41,6 +44,16 @@ class Neuron:
             outputs = self.testing_outputs
 
         return self.loss_function(inputs, outputs, self._predict, weights)
+
+    def calculate_accuracy(self, weights=None, testing=False):
+        inputs = self.inputs
+        outputs = self.outputs
+
+        if testing:
+            inputs = self.testing_inputs
+            outputs = self.testing_outputs
+
+        return self.accuracy_function(inputs, outputs, self._predict, weights)
 
     def armijo_gradient(self):
         partial_derivatives = []
@@ -69,6 +82,14 @@ class Neuron:
 
         return epsilon
 
+    def get_loss(self):
+        return self.loss_history[-1], self.testing_loss_history[-1]
+
+    def get_accuracy(self):
+        return self.accuracy_history[-1], self.testing_accuracy_history[-1]
+
     def train(self):
         self.loss_history.append(self.calculate_loss())
+        self.accuracy_history.append(self.calculate_accuracy())
         self.testing_loss_history.append(self.calculate_loss(testing=True))
+        self.testing_accuracy_history.append(self.calculate_accuracy(testing=True))

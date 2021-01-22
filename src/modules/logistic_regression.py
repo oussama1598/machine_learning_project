@@ -1,5 +1,6 @@
 import numpy as np
 
+from src.helpers.accuracy_functions import r_squared
 from src.helpers.loss_functions import cross_entropy_error, cross_entropy_gradient
 from src.helpers.math_functions import sigmoid
 from src.modules.neuron import Neuron
@@ -7,7 +8,8 @@ from src.modules.neuron import Neuron
 
 class LogisticRegression(Neuron):
     def __init__(self, *args, activation_function=sigmoid, loss_function=cross_entropy_error):
-        super().__init__(*args, activation_function=activation_function, loss_function=loss_function)
+        super().__init__(*args, activation_function=activation_function, loss_function=loss_function,
+                         accuracy_function=r_squared)
 
     def predict(self, x):
         if len(x) != 1:

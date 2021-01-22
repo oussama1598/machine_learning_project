@@ -74,8 +74,9 @@ class Dataset:
         if column == self.output_label:
             return np.min(self.outputs)
 
-    def normalize(self):
-        self.outputs = (self.outputs - np.mean(self.outputs)) / np.std(self.outputs)
+    def normalize(self, ignore_output=False):
+        if not ignore_output:
+            self.outputs = (self.outputs - np.mean(self.outputs)) / np.std(self.outputs)
 
         means = []
         stds = []

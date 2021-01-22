@@ -1,5 +1,6 @@
 import numpy as np
 
+from src.helpers.accuracy_functions import r_squared
 from src.helpers.loss_functions import normal_error
 from src.helpers.math_functions import sign
 from src.modules.neuron import Neuron
@@ -10,7 +11,8 @@ class Perceptron(Neuron):
         super().__init__(
             *args,
             loss_function=normal_error,
-            activation_function=sign
+            activation_function=sign,
+            accuracy_function=r_squared
         )
 
     def predict(self, x):

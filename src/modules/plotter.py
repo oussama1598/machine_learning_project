@@ -35,14 +35,15 @@ class Plotter:
 
         plt.show()
 
-    def scatter_data_for_classification(self, data_min, data_max, save=False):
+    def scatter_data_for_classification(self, data_min, data_max, save=False, no_model=False):
         x_ = np.arange(data_min, data_max, 0.01)
 
         def hypotheses(x):
             return (-(self.model.weights[0] / self.model.weights[1]) * x) - (
                     self.model.weights[2] / self.model.weights[1])
 
-        plt.plot(x_, [hypotheses(x) for x in x_], 'r', label='Model')
+        if not no_model:
+            plt.plot(x_, [hypotheses(x) for x in x_], 'r', label='Model')
 
         plt.scatter(self.training_inputs[:, 0], self.training_inputs[:, 1], c=self.training_outputs,
                     label='Training Data')
